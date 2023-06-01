@@ -6,6 +6,23 @@ List::List()
 {
 }
 
+//Example
+List::List(int num)
+{
+    _head = new Node;
+    _head->next = new Node;
+    _head->next->next = new Node;
+    _head->next->next->next = nullptr;
+
+    _head->another = _head->next->next;
+    _head->next->another = _head;
+    _head->next->next->another = _head->next;
+
+    _head->value = 1;
+    _head->next->value = 2;
+    _head->next->next->value = 3;
+}
+
 List::~List()
 {
     clear();
@@ -36,13 +53,13 @@ void List::push_back(const int value)
 {
     if (empty())
     {
-        _head = new Node{ nullptr, value };
+        _head = new Node{ nullptr, nullptr, value };
         ++_size;
     }
     else
     {
         Node* lastNode = back();
-        lastNode->next = new Node{nullptr, value};
+        lastNode->next = new Node{nullptr, nullptr, value};
         ++_size;
     }
 }
@@ -73,7 +90,7 @@ void List::insert(const int position, const int value)
 {
 	if (empty())
 	{
-		_head = new Node{ nullptr, value };
+		_head = new Node{ nullptr, nullptr, value };
 		++_size;
 	}
 	else
@@ -88,7 +105,7 @@ void List::insert(const int position, const int value)
 		if (i != position)
 			throw std::out_of_range("Invalid position!");
 		Node* nextNode = currentNode->next;
-		currentNode->next = new Node{ nextNode, value };
+		currentNode->next = new Node{ nextNode, nullptr, value };
 		++_size;
 	}
 }
@@ -216,4 +233,33 @@ int List::middle()
     } 
 
     return currentNode1->value;
+}
+
+List* List::copy()
+{
+    List* newList = new List;
+    Node* currentNode = _head;
+    while (currentNode != nullptr)
+    {
+        newList->push_back(currentNode->value);
+        currentNode = currentNode->next;
+    }
+
+    Node* currentOld = _head;
+    Node* currentNew = newList->_head;
+    while (currentOld != nullptr)
+    {
+        currentNode = _head;
+        Node* currentNodeNew = newList->_head;
+        while (currentOld->another != currentNode && currentNode->next != nullptr)
+        {
+            currentNode = currentNode->next;
+            currentNodeNew = currentNodeNew->next;
+        }
+        currentNew->another = currentNodeNew;
+        currentOld = currentOld->next;
+        currentNew = currentNew->next;
+    }
+
+    return newList;
 }
