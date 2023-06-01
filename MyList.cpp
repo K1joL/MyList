@@ -204,12 +204,16 @@ int List::middle()
 {
     if(empty())
         throw std::out_of_range("List is empty!");
-    int i = 0;
-    Node *currentNode = _head;
-    while (i < ((_size - 1) / 2))
+    if (_size < 3)
+        return _head->value;
+
+    Node *currentNode1 = _head;
+    Node *currentNode2 = _head;
+    while(currentNode2->next != nullptr && currentNode2->next->next != nullptr)
     {
-        currentNode = currentNode->next;
-        ++i;
-    }
-    return currentNode->value;
+        currentNode1 = currentNode1->next;
+        currentNode2 = currentNode2->next->next;
+    } 
+
+    return currentNode1->value;
 }
