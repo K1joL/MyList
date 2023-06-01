@@ -141,7 +141,7 @@ void List::sort()
         throw std::logic_error("List is empty!");
     if(_size > 1)
     {
-        for(int i = 0; i < _size; i++)
+        for(int i = 0; i < _size-1; i++)
         {
             Node* currentNode = _head;
             Node* previousNode = nullptr;
@@ -178,22 +178,25 @@ void List::invert()
 {
     if (empty())
         throw std::out_of_range("List is empty!");
-    if (_size > 1)
+    if (_size > 2)
     {
-        Node* newHead = back();
-        Node* currentNode = _head;
-        Node* tempNode = newHead;
-        while (_head->next != tempNode)
+        Node *previousNode = _head;
+        Node *currentNode = _head->next;
+        while (_head->next != nullptr)
         {
-            while (currentNode->next != tempNode)
-                currentNode = currentNode->next;
-            tempNode->next = currentNode;
-            tempNode = currentNode;
-            currentNode = _head;
+            currentNode = _head->next;
+            _head->next = currentNode->next;
+            currentNode->next = previousNode;
+            previousNode = currentNode;
         }
-        tempNode->next = _head;
+        _head = currentNode;
+    }
+    else if(_size > 1)
+    {
+        Node *temp = _head->next;
+        temp->next = _head;
         _head->next = nullptr;
-        _head = newHead;
+        _head = temp;
     }
 }
 
