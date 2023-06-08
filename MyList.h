@@ -31,7 +31,6 @@ public:
     // возвращает значение последнего удалённого элемента
     int pop_back();
 
-    //Insert element in next position (position+1)
     //If List is empty then insert in first position
     void insert(const int position, const int value);
 
