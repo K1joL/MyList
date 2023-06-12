@@ -5,15 +5,22 @@ class List {
 
     struct Node {
         Node* next;
+        Node* another;
         int value;
     };
 
     //Возвращает последний элемент в списке (с помощью обхода)
     Node* back();
 
+private:
+    Node* _head = nullptr;
+    size_t _size = 0;
+
 public:
 
     List();
+    
+    List(int num);
 
     ~List();
 
@@ -51,9 +58,8 @@ public:
     //Возвращает значение среднего элемента списка
     int middle();
 
-private:
-    Node* _head = nullptr;
-    size_t _size = 0;
+    List* copy();
+
 };
 
 #endif // !MYLIST_H
