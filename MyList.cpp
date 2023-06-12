@@ -71,24 +71,34 @@ int List::pop_back()
 
 void List::insert(const int position, const int value)
 {
-	if (empty())
+	if (empty() || position == _size)
 	{
-		_head = new Node{ nullptr, value };
-		++_size;
+        push_back(value);
+        return;
 	}
-	else
+    
+    if ( position < 0 || position > _size )
+        throw std::out_of_range("Invalid position!");
+
+    if (position == 0)
+    {
+        Node* nextNode = _head;
+        _head = new Node{ nextNode, value };
+        ++_size;
+    }
+    else
 	{
 		size_t i = 0;
 		Node* currentNode = _head;
-		while (currentNode->next != nullptr && i < position)
+        Node* previousNode = nullptr;
+		do
 		{
+            previousNode = currentNode;
 			currentNode = currentNode->next;
 			i++;
-		}
-		if (i != position)
-			throw std::out_of_range("Invalid position!");
-		Node* nextNode = currentNode->next;
-		currentNode->next = new Node{ nextNode, value };
+        }while (i < position);
+        previousNode->next = new Node{ currentNode, value };
+        previousNode->next->next = currentNode;
 		++_size;
 	}
 }
@@ -97,24 +107,37 @@ void List::erase(const int position)
 {
     if (empty())
         throw std::out_of_range("List is empty!");
-    int i = 0;
-    Node* currentNode = _head;
-    Node* previousNode = nullptr;
-    while (currentNode->next != nullptr && i < position)
-    {
-        previousNode = currentNode;
-        currentNode = currentNode->next;
-        i++;
-    }
-    if (i != position)
+
+    if (position < 0 || position > _size)
         throw std::out_of_range("Invalid position!");
-    Node *nextNode = currentNode->next; //next Node of Node in position
-    delete currentNode;
-    --_size;
-    if (previousNode != nullptr)
-        previousNode->next = nextNode;
+
+    if (position == 0)
+    {
+        Node *newHead = _head->next;
+        delete _head;
+        _head = newHead;
+        --_size;
+    }
+    else if (position == _size - 1)
+    {
+        pop_back();
+    }
     else
-        _head = nextNode;
+    {
+        int i = 0;
+        Node* currentNode = _head;
+        Node* previousNode = nullptr;
+        do
+        {
+            previousNode = currentNode;
+            currentNode = currentNode->next;
+            i++;
+        } while (i < position);
+        Node* nextNode = currentNode->next; //next Node of Node in position
+        delete currentNode;
+        previousNode->next = nextNode;
+        --_size;
+    }
 }
 
 void List::clear()
@@ -141,7 +164,7 @@ void List::sort()
         throw std::logic_error("List is empty!");
     if(_size > 1)
     {
-        for(int i = 0; i < _size; i++)
+        for(int i = 0; i < _size-1; i++)
         {
             Node* currentNode = _head;
             Node* previousNode = nullptr;
@@ -178,22 +201,25 @@ void List::invert()
 {
     if (empty())
         throw std::out_of_range("List is empty!");
-    if (_size > 1)
+    if (_size > 2)
     {
-        Node* newHead = back();
-        Node* currentNode = _head;
-        Node* tempNode = newHead;
-        while (_head->next != tempNode)
+        Node *previousNode = _head;
+        Node *currentNode = _head->next;
+        while (_head->next != nullptr)
         {
-            while (currentNode->next != tempNode)
-                currentNode = currentNode->next;
-            tempNode->next = currentNode;
-            tempNode = currentNode;
-            currentNode = _head;
+            currentNode = _head->next;
+            _head->next = currentNode->next;
+            currentNode->next = previousNode;
+            previousNode = currentNode;
         }
-        tempNode->next = _head;
+        _head = currentNode;
+    }
+    else if(_size == 2)
+    {
+        Node *temp = _head->next;
+        temp->next = _head;
         _head->next = nullptr;
-        _head = newHead;
+        _head = temp;
     }
 }
 
@@ -201,12 +227,16 @@ int List::middle()
 {
     if(empty())
         throw std::out_of_range("List is empty!");
-    int i = 0;
-    Node *currentNode = _head;
-    while (i < ((_size - 1) / 2))
+    if (_size < 3)
+        return _head->value;
+
+    Node *currentNode1 = _head;
+    Node *currentNode2 = _head;
+    while(currentNode2->next != nullptr && currentNode2->next->next != nullptr)
     {
-        currentNode = currentNode->next;
-        ++i;
-    }
-    return currentNode->value;
+        currentNode1 = currentNode1->next;
+        currentNode2 = currentNode2->next->next;
+    } 
+
+    return currentNode1->value;
 }

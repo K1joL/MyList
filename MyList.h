@@ -20,6 +20,8 @@ public:
     //Возвращает true если список пустой
     bool empty();
 
+    const Node *getHead() { return this->_head; }
+
     //Возвращает указатель на последний элемент в списке (с помощью обхода)
     const Node *cback();
 
@@ -29,7 +31,6 @@ public:
     // возвращает значение последнего удалённого элемента
     int pop_back();
 
-    //Insert element in next position (position+1)
     //If List is empty then insert in first position
     void insert(const int position, const int value);
 
