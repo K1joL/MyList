@@ -224,15 +224,15 @@ int List::middle()
     if (_size < 3)
         return _head->value;
 
-    Node *currentNode1 = _head;
-    Node *currentNode2 = _head;
-    while(currentNode2->next != nullptr && currentNode2->next->next != nullptr)
+    Node *slowPtr = _head;
+    Node *fastPtr = _head;
+    while(fastPtr->next != nullptr && fastPtr->next->next != nullptr)
     {
-        currentNode1 = currentNode1->next;
-        currentNode2 = currentNode2->next->next;
+        slowPtr = slowPtr->next;
+        fastPtr = fastPtr->next->next;
     } 
 
-    return currentNode1->value;
+    return slowPtr->value;
 }
 
 List* List::copy()
