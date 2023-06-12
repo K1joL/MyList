@@ -214,7 +214,7 @@ void List::invert()
         }
         _head = currentNode;
     }
-    else if(_size > 1)
+    else if(_size == 2)
     {
         Node *temp = _head->next;
         temp->next = _head;
