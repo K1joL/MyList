@@ -27,6 +27,8 @@ public:
     //Возвращает true если список пустой
     bool empty();
 
+    const Node* getHead() { return this->_head; }
+
     //Возвращает указатель на последний элемент в списке (с помощью обхода)
     const Node *cback();
 

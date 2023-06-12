@@ -21,6 +21,7 @@ List::List(int num)
     _head->value = 1;
     _head->next->value = 2;
     _head->next->next->value = 3;
+    _size = 3;
 }
 
 List::~List()
