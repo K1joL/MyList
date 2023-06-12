@@ -237,29 +237,48 @@ int List::middle()
 
 List* List::copy()
 {
-    List* newList = new List;
-    Node* currentNode = _head;
-    while (currentNode != nullptr)
+    if ((_head != nullptr) && (_head->next == nullptr))
     {
-        newList->push_back(currentNode->value);
-        currentNode = currentNode->next;
+        List* newList = new List();
+        newList->_head = new Node{nullptr, nullptr, _head->value};
+        return newList;
     }
-
-    Node* currentOld = _head;
-    Node* currentNew = newList->_head;
-    while (currentOld != nullptr)
+    if (_head != nullptr)
     {
-        currentNode = _head;
-        Node* currentNodeNew = newList->_head;
-        while (currentOld->another != currentNode && currentNode->next != nullptr)
+        List* newList = new List;
+        Node* currentNode = _head;
+        while (currentNode != nullptr)
         {
+            Node* temp = currentNode->next;
+            currentNode->next = new Node{ temp, currentNode->another, currentNode->value };
+            currentNode = currentNode->next->next;
+        }
+        currentNode = _head->next;
+        while (currentNode->next != nullptr)
+        {
+            currentNode->another = currentNode->another->next;
+            currentNode = currentNode->next->next;
+        }
+        currentNode->another = currentNode->another->next;
+
+        currentNode = _head;
+        Node* newHead = _head->next;
+        Node* temp = _head->next;
+        Node* currentNodeNew = _head->next;
+        while (currentNodeNew->next != nullptr)
+        {
+            currentNode->next = currentNode->next->next;
+            currentNodeNew->next = currentNodeNew->next->next;
             currentNode = currentNode->next;
             currentNodeNew = currentNodeNew->next;
+            temp->next = currentNodeNew;
+            temp = temp->next;
         }
-        currentNew->another = currentNodeNew;
-        currentOld = currentOld->next;
-        currentNew = currentNew->next;
-    }
+        currentNode->next = nullptr;
 
-    return newList;
+        newList->_head = newHead;
+        newList->_size = _size;
+        return newList;
+    }
+    else return nullptr;
 }
