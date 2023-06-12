@@ -23,15 +23,19 @@ TEST_F(MyClassTest, push_back_test)
 {
 	//Act
 	list->push_back(1);
+	size_t size = list->size();
 
 	//Assert
 	EXPECT_EQ(list->getHead()->value, 1);
+	EXPECT_EQ(size, 1);
 
 	//Act
 	list->push_back(2);
+	size = list->size();
 
 	//Assert
 	EXPECT_EQ(list->getHead()->next->value, 2);
+	EXPECT_EQ(size, 2);
 }
 
 TEST_F(MyClassTest, pop_back_test)
@@ -195,6 +199,9 @@ TEST_F(MyClassTest, clear_test)
 	list->push_back(3);
 	auto node = list->cback();
 	size_t size = list->size();
+	//Assert
+	EXPECT_EQ(size, 3);
+
 	list->clear();
 	size = list->size();
 	//Assert
